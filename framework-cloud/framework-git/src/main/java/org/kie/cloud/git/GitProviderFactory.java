@@ -21,6 +21,7 @@ import java.util.Map;
 import org.kie.cloud.git.constants.GitConstants;
 import org.kie.cloud.git.github.GitHubGitProvider;
 import org.kie.cloud.git.gitlab.GitLabGitProvider;
+import org.kie.cloud.git.gogs.GogsGitProvider;
 
 public class GitProviderFactory {
 
@@ -29,6 +30,7 @@ public class GitProviderFactory {
     static {
         gitProviders.put("GitLab", new GitLabGitProvider());
         gitProviders.put("GitHub", new GitHubGitProvider());
+        gitProviders.put("Gogs", new GogsGitProvider());
     }
 
     private GitProviderFactory() {}

@@ -26,4 +26,6 @@ public interface GitProvider {
     String getRepositoryUrl(String repositoryName);
 
     void init();
+
+    void destroy();
 }

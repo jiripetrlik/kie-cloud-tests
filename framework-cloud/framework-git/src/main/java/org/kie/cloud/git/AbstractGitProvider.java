@@ -29,6 +29,14 @@ import org.kie.cloud.git.constants.GitConstants;
 public abstract class AbstractGitProvider implements GitProvider {
 
     @Override
+    public void init() {
+    }
+
+    @Override
+    public void destroy() {
+    }
+
+    @Override
     public String createGitRepositoryWithPrefix(String repositoryPrefixName, String repositoryPath) {
         String repoName = repositoryPrefixName + "-" + UUID.randomUUID().toString().substring(0, 4);
         createGitRepository(repoName, ClassLoader.class.getResource(repositoryPath).getFile());
