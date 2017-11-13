@@ -85,23 +85,6 @@
         <filtering>true</filtering>
       </testResource>
     </testResources>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <configuration>
-            <systemProperties>
-              <kjars.build.settings.xml>${kjars.build.settings.xml}</kjars.build.settings.xml>
-              <instance.logs>${project.build.directory}/instances</instance.logs>
-            </systemProperties>
-            <parallel>classes</parallel>
-            <threadCount>3</threadCount>
-            <perCoreThreadCount>false</perCoreThreadCount>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -123,6 +106,28 @@
           <scope>test</scope>
         </dependency>
       </dependencies>
+    </profile>
+    <profile>
+      <id>parallel-execution</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-failsafe-plugin</artifactId>
+              <configuration>
+                <systemProperties>
+                  <kjars.build.settings.xml>${kjars.build.settings.xml}</kjars.build.settings.xml>
+                  <instance.logs>${project.build.directory}/instances</instance.logs>
+                </systemProperties>
+                <parallel>classes</parallel>
+                <threadCount>3</threadCount>
+                <perCoreThreadCount>false</perCoreThreadCount>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
     </profile>
   </profiles>
 </project>
