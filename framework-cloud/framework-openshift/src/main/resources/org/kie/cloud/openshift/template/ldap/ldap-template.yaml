@@ -1,0 +1,88 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: ldap-template
+  annotations:
+    name: ldap-template
+    description: Application template for ldap server
+message: A new ldap server was created
+
+parameters:
+- name: APPLICATION_NAME
+  displayName: Application Name
+  description: The name for the application.
+  value: ldap
+  required: true
+
+objects:
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: "rhba-qe-ldap"
+    annotations:
+      openshift.io/image.insecureRepository: 'true'
+  spec:
+    tags:
+    - name: 'latest'
+      from:
+        kind: DockerImage
+        name: bxms-binaries.usersys.redhat.com:5000/openldap:latest
+      importPolicy:
+        insecure: true
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${APPLICATION_NAME}-ldap"
+    labels:
+      application: "${APPLICATION_NAME}"
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - "${APPLICATION_NAME}-ldap"
+        from:
+          kind: ImageStreamTag
+          name: "rhba-qe-ldap:latest"
+    - type: ConfigChange
+    replicas: 1
+    selector:
+      deploymentConfig: "${APPLICATION_NAME}-ldap"
+    template:
+      metadata:
+        name: "${APPLICATION_NAME}-ldap"
+        labels:
+          application: "${APPLICATION_NAME}"
+          deploymentConfig: "${APPLICATION_NAME}-ldap"
+      spec:
+        containers:
+        - name: "${APPLICATION_NAME}-ldap"
+          image: "rhba-qe-ldap:latest"
+          imagePullPolicy: Always
+          ports:
+          - name: "ldap"
+            containerPort: 389
+            protocol: TCP
+          - name: "ldap-tls"
+            containerPort: 636
+            protocol: TCP
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${APPLICATION_NAME}-ldap"
+    labels:
+      application: "${APPLICATION_NAME}"
+  spec:
+    ports:
+    - name: "ldap"
+      port: 389
+      targetPort: 389
+    - name: "ldap-tls"
+      port: 636
+      targetPort: 636
+    selector:
+      deploymentConfig: "${APPLICATION_NAME}-ldap"
