@@ -58,6 +58,7 @@ public class HACEPLeaderElectionIntegrationTest extends AbstractMethodIsolatedCl
                     .stream().map(instance -> instance.getLogs())
                     .collect(Collectors.toList());
 
+            Thread.sleep(15000);
             Assertions.assertThat(logs.stream().filter(x -> x.contains(LEADER_MESSAGE)).count()).isEqualTo(1);
             Assertions.assertThat(logs.stream().filter(x -> x.contains(REPLICA_MESSAGE)).count()).isEqualTo(2);
         }
